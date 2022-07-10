@@ -1,23 +1,10 @@
 import json
-# import logging
-import os
 import time
 
-# valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-# LOGGING_LEVEL = logging.DEBUG
 
 class Interface:
     def __init__(self, logger):
         self.logger = logger
-
-        # Set up logging
-        # os.makedirs("log", exist_ok=True)
-        # logging.basicConfig(
-        #     filename=os.path.join("log", f"{name}_interface.log"),
-        #     format='%(message)s')
-
-        # self.logger = logging.getLogger("interface")
-        # self.logger.setLevel(LOGGING_LEVEL)
 
     def run(self, q):
 

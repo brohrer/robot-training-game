@@ -1,12 +1,7 @@
 import json
-import logging
-import os
-import time
 from pacemaker.v00 import Pacemaker
 
 CLOCK_FREQ_HZ = 3
-# valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-LOGGING_LEVEL = logging.DEBUG
 
 
 class Model:
@@ -22,6 +17,6 @@ class Model:
                 gotten = q.get()
                 self.logger.debug(json.dumps({
                     "level": "DEBUG",
-                    "time_gotten": time.time(),
-                    "gotten": gotten,
+                    "time_issued": gotten[0],
+                    "command_received": gotten[1],
                 }))
