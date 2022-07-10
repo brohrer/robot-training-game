@@ -10,24 +10,18 @@ LOGGING_LEVEL = logging.DEBUG
 
 
 class Model:
-    def __init__(self, name="_"):
+    def __init__(self, logger):
         self.pacemaker = Pacemaker(CLOCK_FREQ_HZ)
+        self.logger = logger
 
-        # Set up logging
-        os.makedirs("log", exist_ok=True)
-        logging.basicConfig(
-            filename=os.path.join("log", f"{name}_model.log"),
-            format='%(message)s')
+    def run(self, q):
+        for _ in range(1000):
 
-        self.logger = logging.getLogger()
-        # levels = {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-        self.logger.setLevel(LOGGING_LEVEL)
-
-    def run(self):
-        over = self.pacemaker.beat()
-        self.logger.debug(json.dumps({
-            "level": "DEBUG",
-            "over": over,
-            "time": time.time(),
-        }))
-
+            self.pacemaker.beat()
+            while not q.empty():
+                gotten = q.get()
+                self.logger.debug(json.dumps({
+                    "level": "DEBUG",
+                    "time_gotten": time.time(),
+                    "gotten": gotten,
+                }))
