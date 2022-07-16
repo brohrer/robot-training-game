@@ -4,8 +4,8 @@ from logging import Formatter
 import multiprocessing as mp
 import os
 import time
-from human_interface.v00 import Interface
-from model.v00 import Model
+from human_interface.v01 import Interface
+from model.v01 import Model
 from world.v00 import World
 from animation.v00 import Animation
 
