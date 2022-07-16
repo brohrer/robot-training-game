@@ -4,13 +4,13 @@ from logging import Formatter
 import multiprocessing as mp
 import os
 import time
-from human_interface.v01 import Interface
-from model.v01 import Model
+from human_interface.v02 import Interface
+from model.v02 import Model
 from world.v00 import World
 from animation.v00 import Animation
 
 # valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-LOGGING_LEVEL = logging.DEBUG
+LOGGING_LEVEL = logging.INFO
 
 
 def main():
@@ -22,17 +22,21 @@ def main():
     instructions = """
       Welcome to the Robot Training Game.
 
+      Use keys 0-9 as commands.
+      Use space bar as "good job!"
+      and the / key  as "don't do that"
     """
     print(instructions)
 
     # Allow the interface to pass commands to the model
-    q_interface_model = mp.Queue()
+    q_interface_model_command = mp.Queue()
+    q_interface_model_reward = mp.Queue()
     p_interface = mp.Process(
         target=interface.run,
-        args=(q_interface_model,))
+        args=(q_interface_model_command, q_interface_model_reward,))
     p_model = mp.Process(
         target=model.run,
-        args=(q_interface_model,))
+        args=(q_interface_model_command, q_interface_model_reward,))
 
     p_interface.start()
     p_model.start()
