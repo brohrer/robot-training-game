@@ -12,7 +12,7 @@ class Model:
         self.n_actions = n_actions
         self.logger = logger
 
-    def run(self, command_q, reward_q, action_q):
+    def run(self, command_q, reward_q, action_q, sensor_q):
         for _ in range(1000):
 
             self.pacemaker.beat()
@@ -34,6 +34,16 @@ class Model:
                     "level": "DEBUG",
                     "ts": gotten[0],
                     "reward_received": gotten[1],
+                }))
+
+            sensors = []
+            while not sensor_q.empty():
+                gotten = sensor_q.get()
+                sensors.append(gotten[1])
+                self.logger.debug(json.dumps({
+                    "level": "DEBUG",
+                    "ts": gotten[0],
+                    "sensor_received": list(gotten[1]),
                 }))
 
             actions = self.policy_random()

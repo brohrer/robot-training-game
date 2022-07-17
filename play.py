@@ -6,7 +6,7 @@ import os
 import time
 from human_interface.v02 import Interface
 from model.v02 import Model
-from world.v01 import World
+from world.v02 import World
 from animation.v00 import Animation
 
 # valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
@@ -25,14 +25,17 @@ def main():
 
       Use keys 0-9 as commands.
       Use space bar as "good job!"
-      and the minus key  as "don't do that"
+      and the minus key as "don't do that"
     """
     print(instructions)
 
-    # Allow the interface to pass commands to the model
+    # Allow the interface to pass commands to the model.
+    # Each queue handles one variable being passed from one process to another.
     q_interface_model_command = mp.Queue()
     q_interface_model_reward = mp.Queue()
     q_model_world_action = mp.Queue()
+    q_model_world_sensor = mp.Queue()
+
     p_interface = mp.Process(
         target=interface.run,
         args=(
@@ -45,11 +48,13 @@ def main():
             q_interface_model_command,
             q_interface_model_reward,
             q_model_world_action,
+            q_model_world_sensor,
         ))
     p_world = mp.Process(
         target=world.run,
         args=(
             q_model_world_action,
+            q_model_world_sensor,
         ))
 
     p_interface.start()
