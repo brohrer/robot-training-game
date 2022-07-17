@@ -15,7 +15,7 @@ class Interface:
             key = getkey()
             self.logger.debug(json.dumps({
                 "level": "DEBUG",
-                "key_timestamp": time.time(),
+                "key_ts": time.time(),
                 "key_grabbed": key,
             }))
 
@@ -32,7 +32,7 @@ class Interface:
             self.command_q.put((command_time, command))
             self.logger.info(json.dumps({
                 "level": "INFO",
-                "timestamp": command_time,
+                "ts": command_time,
                 "command": command,
             }))
 
@@ -41,7 +41,7 @@ class Interface:
             self.reward_q.put((reward_time, reward))
             self.logger.info(json.dumps({
                 "level": "INFO",
-                "timestamp": reward_time,
+                "ts": reward_time,
                 "reward": reward,
             }))
 
