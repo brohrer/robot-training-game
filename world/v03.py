@@ -1,4 +1,8 @@
 import json
+import logging
+from logging import FileHandler
+from logging import Formatter
+import os
 import time
 import numpy as np
 from pacemaker.v00 import Pacemaker
@@ -6,6 +10,9 @@ from pacemaker.v00 import Pacemaker
 CLOCK_FREQ_HZ = 48
 N_ACTIONS = 2
 N_POSITIONS = 5
+
+# valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
+LOGGING_LEVEL = logging.DEBUG
 
 
 class World:
@@ -18,16 +25,26 @@ class World:
     action[1] indicates a move to the right
     """
 
-    def __init__(self, logger):
+    def __init__(self):
         self.pacemaker = Pacemaker(CLOCK_FREQ_HZ)
         self.n_actions = N_ACTIONS
         self.n_positions = N_POSITIONS
-        self.logger = logger
 
         # Initialize the world
         self.position = np.random.randint(self.n_positions)
 
-    def run(self, action_q, sensor_q):
+        # Set up logging
+        os.makedirs("log", exist_ok=True)
+        log_name = f"{int(time.time())}"
+        self.logger = logging.getLogger("world")
+        self.logger.setLevel(LOGGING_LEVEL)
+        logger_file_handler = FileHandler(
+            os.path.join("log", f"{log_name}_world.log"))
+        logger_file_handler.setLevel(LOGGING_LEVEL)
+        logger_file_handler.setFormatter(Formatter("%(message)s"))
+        self.logger.addHandler(logger_file_handler)
+
+    def run(self, model_action_q, model_sensor_q, animation_sensor_q):
         for _ in range(1000):
 
             self.pacemaker.beat()
@@ -36,8 +53,8 @@ class World:
             # Negative values are steps to the left.
             # Zero means no action.
             net_action = 0
-            while not action_q.empty():
-                timestamp, actions = action_q.get()
+            while not model_action_q.empty():
+                timestamp, actions = model_action_q.get()
                 self.logger.debug(
                     json.dumps(
                         {
@@ -84,4 +101,5 @@ class World:
                     )
                 )
 
-            sensor_q.put((acted_time, sensors))
+            model_sensor_q.put((acted_time, sensors))
+            animation_sensor_q.put((acted_time, sensors))

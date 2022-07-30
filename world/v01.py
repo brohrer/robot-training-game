@@ -19,10 +19,14 @@ class World:
             while not action_q.empty():
                 gotten = action_q.get()
                 actions.append(gotten[1])
-                self.logger.debug(json.dumps({
-                    "level": "DEBUG",
-                    "ts": gotten[0],
-                    "action_received": list(gotten[1]),
-                }))
+                self.logger.debug(
+                    json.dumps(
+                        {
+                            "level": "DEBUG",
+                            "ts": gotten[0],
+                            "action_received": list(gotten[1]),
+                        }
+                    )
+                )
 
             # print(f"actions {actions}")

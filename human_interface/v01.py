@@ -13,9 +13,12 @@ class Interface:
             command = getkey()
             time_issued = time.time()
             q.put((time_issued, command))
-            self.logger.debug(json.dumps({
-                "level": "DEBUG",
-                "time_issued": time_issued,
-                "command": command,
-            }))
-
+            self.logger.debug(
+                json.dumps(
+                    {
+                        "level": "DEBUG",
+                        "time_issued": time_issued,
+                        "command": command,
+                    }
+                )
+            )

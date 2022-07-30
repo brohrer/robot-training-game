@@ -27,12 +27,8 @@ def main():
 
     # Allow the interface to pass commands to the model
     q_interface_model = mp.Queue()
-    p_interface = mp.Process(
-        target=interface.run,
-        args=(q_interface_model,))
-    p_model = mp.Process(
-        target=model.run,
-        args=(q_interface_model,))
+    p_interface = mp.Process(target=interface.run, args=(q_interface_model,))
+    p_model = mp.Process(target=model.run, args=(q_interface_model,))
 
     p_interface.start()
     p_model.start()
@@ -45,17 +41,19 @@ def set_up_loggers():
     interface_logger = logging.getLogger("interface")
     interface_logger.setLevel(LOGGING_LEVEL)
     interface_logger_file_handler = FileHandler(
-        os.path.join("log", f"{time_name}_interface.log"))
+        os.path.join("log", f"{time_name}_interface.log")
+    )
     interface_logger_file_handler.setLevel(LOGGING_LEVEL)
-    interface_logger_file_handler.setFormatter(Formatter('%(message)s'))
+    interface_logger_file_handler.setFormatter(Formatter("%(message)s"))
     interface_logger.addHandler(interface_logger_file_handler)
 
     model_logger = logging.getLogger("model")
     model_logger.setLevel(LOGGING_LEVEL)
     model_logger_file_handler = FileHandler(
-        os.path.join("log", f"{time_name}_model.log"))
+        os.path.join("log", f"{time_name}_model.log")
+    )
     model_logger_file_handler.setLevel(LOGGING_LEVEL)
-    model_logger_file_handler.setFormatter(Formatter('%(message)s'))
+    model_logger_file_handler.setFormatter(Formatter("%(message)s"))
     model_logger.addHandler(model_logger_file_handler)
 
     return interface_logger, model_logger

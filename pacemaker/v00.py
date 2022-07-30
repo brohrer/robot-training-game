@@ -21,6 +21,7 @@ class Pacemaker:
 
     For consistency, all the time units are in seconds.
     """
+
     def __init__(self, clock_freq_Hz):
         self.clock_period = 1 / float(clock_freq_Hz)
         self.last_run_completed = time.time()
@@ -30,7 +31,7 @@ class Pacemaker:
         # It seems to vary depending on clock frequency.
         # At higher frequencies it's on the order of
         # one percent of the sleep duration.
-        self.sleep_overhead_correction = .99
+        self.sleep_overhead_correction = 0.99
 
     def beat(self):
         self.last_run_completed = self.this_run_completed

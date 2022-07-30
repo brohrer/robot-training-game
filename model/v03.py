@@ -1,24 +1,48 @@
 import json
+import logging
+from logging import FileHandler
+from logging import Formatter
+import os
 import time
 import numpy as np
 from pacemaker.v00 import Pacemaker
 
 CLOCK_FREQ_HZ = 3
 
+# valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
+LOGGING_LEVEL = logging.DEBUG
+
 
 class Model:
-    def __init__(self, n_actions, logger):
+    def __init__(self, n_actions):
         self.pacemaker = Pacemaker(CLOCK_FREQ_HZ)
         self.n_actions = n_actions
-        self.logger = logger
 
-    def run(self, command_q, reward_q, action_q, sensor_q):
+        # Set up logging
+        os.makedirs("log", exist_ok=True)
+        log_name = f"{int(time.time())}"
+        self.logger = logging.getLogger("model")
+        self.logger.setLevel(LOGGING_LEVEL)
+        logger_file_handler = FileHandler(
+            os.path.join("log", f"{log_name}_model.log"))
+        logger_file_handler.setLevel(LOGGING_LEVEL)
+        logger_file_handler.setFormatter(Formatter("%(message)s"))
+        self.logger.addHandler(logger_file_handler)
+
+    def run(
+        self,
+        interface_command_q,
+        interface_reward_q,
+        world_action_q,
+        animation_action_q,
+        world_sensor_q,
+    ):
         for _ in range(1000):
 
             self.pacemaker.beat()
             commands = []
-            while not command_q.empty():
-                gotten = command_q.get()
+            while not interface_command_q.empty():
+                gotten = interface_command_q.get()
                 commands.append(gotten[1])
                 self.logger.debug(
                     json.dumps(
@@ -31,8 +55,8 @@ class Model:
                 )
 
             reward = 0
-            while not reward_q.empty():
-                gotten = reward_q.get()
+            while not interface_reward_q.empty():
+                gotten = interface_reward_q.get()
                 reward += gotten[1]
                 self.logger.debug(
                     json.dumps(
@@ -45,8 +69,8 @@ class Model:
                 )
 
             sensors = []
-            while not sensor_q.empty():
-                gotten = sensor_q.get()
+            while not world_sensor_q.empty():
+                gotten = world_sensor_q.get()
                 sensors.append(gotten[1])
                 self.logger.debug(
                     json.dumps(
@@ -60,7 +84,8 @@ class Model:
 
             actions = self.policy_random()
             action_time = time.time()
-            action_q.put((action_time, actions))
+            world_action_q.put((action_time, actions))
+            animation_action_q.put((action_time, actions))
             self.logger.info(
                 json.dumps(
                     {
