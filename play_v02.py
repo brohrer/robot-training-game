@@ -2,7 +2,7 @@ import multiprocessing as mp
 from human_interface.v03 import Interface
 from model.v03 import Model
 from world.v03 import World
-from animation.v02 import Animation
+from animation.v01 import Animation
 
 
 def main():
@@ -14,7 +14,7 @@ def main():
     instructions = """
       Welcome to the Robot Training Game.
 
-      Use keys 1-9 as commands.
+      Use keys 0-9 as commands.
       Use space bar as "good job!"
       and the minus key as "don't do that"
 

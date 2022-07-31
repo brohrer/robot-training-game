@@ -12,7 +12,7 @@ N_ACTIONS = 2
 N_POSITIONS = 5
 
 # valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-LOGGING_LEVEL = logging.DEBUG
+LOGGING_LEVEL = logging.INFO
 
 
 class World:

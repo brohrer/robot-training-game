@@ -7,7 +7,7 @@ import time
 from getkey import getkey
 
 # valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-LOGGING_LEVEL = logging.DEBUG
+LOGGING_LEVEL = logging.INFO
 
 
 class Interface:
@@ -52,7 +52,7 @@ class Interface:
                 self._reward(reward=1)
             if key == "-":
                 self._reward(reward=-1)
-            if key in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]:
+            if key in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
                 self._command(command=key)
 
     def _command(self, command=None):

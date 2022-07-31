@@ -10,7 +10,7 @@ from pacemaker.v00 import Pacemaker
 CLOCK_FREQ_HZ = 3
 
 # valid levels are {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-LOGGING_LEVEL = logging.DEBUG
+LOGGING_LEVEL = logging.INFO
 
 
 class Model:
