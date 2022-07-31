@@ -37,7 +37,7 @@ class Model:
         animation_action_q,
         world_sensor_q,
     ):
-        for _ in range(1000):
+        while True:
 
             self.pacemaker.beat()
             commands = []

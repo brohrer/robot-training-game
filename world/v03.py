@@ -45,8 +45,7 @@ class World:
         self.logger.addHandler(logger_file_handler)
 
     def run(self, model_action_q, model_sensor_q, animation_sensor_q):
-        for _ in range(1000):
-
+        while True:
             self.pacemaker.beat()
             # The combined effect of all actions issued.
             # Positive values are steps to the right.
